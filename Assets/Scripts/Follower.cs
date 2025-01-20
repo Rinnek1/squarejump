@@ -13,8 +13,7 @@ public class CameraController : MonoBehaviour
     [Tooltip("How smoothly the camera follows the target")]
     [SerializeField] private float smoothSpeed = 0.125f;
 
-    [Tooltip("Offset from target position")]
-    [SerializeField] private Vector3 offset = new Vector3(0f, 0f, -10f);
+    private readonly float cameraZPosition = -10f;
 
     /// <summary>
     /// Follows target position with smooth movement.
@@ -24,17 +23,19 @@ public class CameraController : MonoBehaviour
     {
         if (target != null && target.position.y > transform.position.y)
         {
+            Debug.Log($"Camera position: {transform.position}");
+            Debug.Log($"Target position: {target.position}");
             // Keep current X and Z positions, only update Y
             Vector3 newPosition = new Vector3(
                 transform.position.x,
                 target.position.y,
-                transform.position.z
+                cameraZPosition
             );
 
             // Apply smooth movement
             transform.position = Vector3.Lerp(
                 transform.position,
-                newPosition + offset,
+                newPosition,
                 smoothSpeed
             );
         }
