@@ -369,9 +369,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 0.2264151, g: 0.19330722, b: 0.19330722, a: 1}
-    m_PressedColor: {r: 0.122641504, g: 0.10586507, b: 0.10586507, a: 1}
+    m_NormalColor: {r: 1, g: 0.7877358, b: 0.96666974, a: 1}
+    m_HighlightedColor: {r: 0.83137256, g: 0.5372549, b: 0.7882353, a: 1}
+    m_PressedColor: {r: 0.7058824, g: 0.47843137, b: 0.6745098, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -391,7 +391,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 593323167}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1844415158}
+        m_TargetAssemblyTypeName: MenuBehaviour, Assembly-CSharp
+        m_MethodName: SwitchScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Square Jump
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &593323167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,9 +687,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 0.2264151, g: 0.19330722, b: 0.19330722, a: 1}
-    m_PressedColor: {r: 0.122641504, g: 0.10586507, b: 0.10586507, a: 1}
+    m_NormalColor: {r: 1, g: 0.7882353, b: 0.96862745, a: 1}
+    m_HighlightedColor: {r: 0.8301887, g: 0.53648984, b: 0.78667766, a: 1}
+    m_PressedColor: {r: 0.7075472, g: 0.4772606, b: 0.67343056, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -913,7 +925,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: ef0aa0fdbef3c0e44bdb8ca30ec0bfaa, type: 3}
+  m_Texture: {fileID: 2800000, guid: f576bcbdb2a99ee4c9a8c1232496136b, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1032,6 +1044,7 @@ GameObject:
   - component: {fileID: 1844415156}
   - component: {fileID: 1844415155}
   - component: {fileID: 1844415154}
+  - component: {fileID: 1844415158}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1125,6 +1138,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1844415158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844415153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a50142eb7c17f740b6a15c4022a5931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElement: {fileID: 725862780}
 --- !u!1 &1900746119
 GameObject:
   m_ObjectHideFlags: 0
