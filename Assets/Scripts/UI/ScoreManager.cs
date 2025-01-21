@@ -10,10 +10,15 @@ public class ScoreManager : MonoBehaviour
     [Tooltip("Reference to the UI Text for the score")]
     public TextMeshProUGUI scoreText;
 
+    [Tooltip("Reference to the UI Text for the high score")]
+    public TextMeshProUGUI highScoreText;
+
     private float startingY;
+    private int currentScore;
+    private int highScore;
 
     /// <summary>
-    /// Initialize the starting position of the player.
+    /// Initialize the starting position and load the high score.
     /// </summary>
     private void Start()
     {
@@ -21,6 +26,10 @@ public class ScoreManager : MonoBehaviour
         {
             startingY = player.position.y;
         }
+
+        // Load the saved high score
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        UpdateHighScoreUI();
     }
 
     /// <summary>
@@ -31,12 +40,21 @@ public class ScoreManager : MonoBehaviour
         if (player != null)
         {
             float distanceTravelled = Mathf.Max(0, player.position.y - startingY);
-            UpdateScoreUI(Mathf.FloorToInt(distanceTravelled));
+            currentScore = Mathf.FloorToInt(distanceTravelled);
+            UpdateScoreUI(currentScore);
+
+            // Check and update the high score if necessary
+            if (currentScore > highScore)
+            {
+                highScore = currentScore;
+                SaveHighScore();
+                UpdateHighScoreUI();
+            }
         }
     }
 
     /// <summary>
-    /// Updates the UI Text element with the current score.
+    /// Updates the current score UI.
     /// </summary>
     /// <param name="score">The current score to display</param>
     private void UpdateScoreUI(int score)
@@ -45,5 +63,25 @@ public class ScoreManager : MonoBehaviour
         {
             scoreText.text = "Score: " + score.ToString();
         }
+    }
+
+    /// <summary>
+    /// Updates the high score UI.
+    /// </summary>
+    private void UpdateHighScoreUI()
+    {
+        if (highScoreText != null)
+        {
+            highScoreText.text = "High Score: " + highScore.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Saves the high score using PlayerPrefs.
+    /// </summary>
+    private void SaveHighScore()
+    {
+        PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.Save(); // Ensure the high score is saved
     }
 }
