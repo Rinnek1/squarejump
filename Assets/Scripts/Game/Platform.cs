@@ -13,28 +13,16 @@ public class Platform : MonoBehaviour
     [Tooltip("Maximum allowed collision velocity")]
     [SerializeField] private float maxCollisionVelocity = 20f;
 
-    [Header("Effects")]
-    [SerializeField] private ParticleSystem bounceEffect;
-    [SerializeField] private AudioClip bounceSound;
-
-    private AudioSource audioSource;
-
-    private void Start()
-    {
-        audioSource = gameObject.AddComponent<AudioSource>();
-    }
-
     /// <summary>
     /// Handles collision detection and bounce mechanics.
     /// </summary>
     /// <param name="collision">Collision information containing colliding object data</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Sprawdź czy obiekt porusza się w dół
+        // Check if object is falling onto the platform
         if (collision.relativeVelocity.y <= 0f)
         {
             ProcessCollision(collision);
-            PlayBounceEffects();
         }
     }
 
@@ -58,24 +46,15 @@ public class Platform : MonoBehaviour
     {
         Vector2 velocity = rb.velocity;
 
-        // Zachowaj obecną prędkość poziomą
+        // Preserve current horizontal velocity
         float currentHorizontalVelocity = velocity.x;
 
-        // Zastosuj siłę odbicia z ograniczeniem
+        // Apply bounce force with clamping
         velocity.y = Mathf.Clamp(jumpForce, -maxCollisionVelocity, maxCollisionVelocity);
 
-        // Przywróć prędkość poziomą
+        // Restore horizontal velocity
         velocity.x = currentHorizontalVelocity;
 
         rb.velocity = velocity;
-    }
-
-    private void PlayBounceEffects()
-    {
-        if (bounceEffect != null) bounceEffect.Play();
-        if (bounceSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(bounceSound);
-        }
     }
 }
