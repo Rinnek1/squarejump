@@ -20,6 +20,15 @@ public class SquareAnimator : MonoBehaviour
     [Tooltip("Speed of squash/stretch animations")]
     [SerializeField] private float animationSpeed = 8f;
 
+    [Header("Tilt Settings")]
+    [Tooltip("Maximum tilt angle during movement")]
+    [SerializeField] private float maxTiltAngle = 15f;
+
+    [Tooltip("How fast the square tilts")]
+    [SerializeField] private float tiltSpeed = 5f;
+
+    private PlayerController playerController; // Reference to PlayerController
+
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem jumpParticles;
     [SerializeField] private ParticleSystem landParticles;
@@ -34,6 +43,7 @@ public class SquareAnimator : MonoBehaviour
     private Vector3 originalScale;
     private Vector3 targetScale;
     private float verticalVelocity;
+    private bool hasPlayedJumpSound = false;
 
     /// <summary>
     /// Initializes required components and stores original scale
@@ -41,7 +51,12 @@ public class SquareAnimator : MonoBehaviour
     private void Awake()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+        audioSource.volume = 1f;
+
         rb = GetComponent<Rigidbody2D>();
+        playerController = GetComponent<PlayerController>(); // Get reference to PlayerController
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,6 +74,7 @@ public class SquareAnimator : MonoBehaviour
         if (rb.velocity.y < 0 && verticalVelocity >= 0)
         {
             targetScale = originalScale;
+            hasPlayedJumpSound = false; // Reset flag when falling
         }
 
         // Store current vertical velocity for next frame comparison
@@ -72,11 +88,14 @@ public class SquareAnimator : MonoBehaviour
         );
 
         // Check for jump animation conditions
-        if (rb.velocity.y > 1f && !isGrounded)
+        if (rb.velocity.y > 1f && !isGrounded && !hasPlayedJumpSound)
         {
             ApplyJumpStretch();
             PlayJumpEffects();
+            hasPlayedJumpSound = true; // Set flag after playing jump sound
         }
+        // Apply tilt based on horizontal movement
+        ApplyMovementTilt();
     }
 
     /// <summary>
@@ -87,6 +106,7 @@ public class SquareAnimator : MonoBehaviour
         if (collision.relativeVelocity.y > 0)
         {
             isGrounded = true;
+            hasPlayedJumpSound = false; // Reset flag on landing
             ApplyLandSquash();
             PlayLandingEffects();
 
@@ -100,6 +120,26 @@ public class SquareAnimator : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         isGrounded = false;
+    }
+
+    /// <summary>
+    /// Applies tilt effect based on horizontal movement
+    /// </summary>
+    private void ApplyMovementTilt()
+    {
+        float horizontalVelocity = rb.velocity.x;
+        float targetRotation = 0f;
+
+        if (Mathf.Abs(horizontalVelocity) > 0.1f)
+        {
+            // Added positive sign to reverse the tilt direction
+            targetRotation = horizontalVelocity * maxTiltAngle / playerController.moveSpeed;
+        }
+
+        // Smoothly rotate the visual transform
+        Quaternion currentRotation = visualTransform.rotation;
+        Quaternion targetQuaternion = Quaternion.Euler(0, 0, targetRotation);
+        visualTransform.rotation = Quaternion.Lerp(currentRotation, targetQuaternion, Time.deltaTime * tiltSpeed);
     }
 
     /// <summary>
@@ -135,7 +175,10 @@ public class SquareAnimator : MonoBehaviour
             jumpParticles.Play();
 
         if (jumpSound != null && audioSource != null)
+        {
+            audioSource.volume = 1.2f; // Slightly louder jump sound
             audioSource.PlayOneShot(jumpSound);
+        }
     }
 
     /// <summary>
@@ -151,7 +194,10 @@ public class SquareAnimator : MonoBehaviour
         }
 
         if (landSound != null && audioSource != null)
+        {
+            audioSource.volume = 1f; // Normal volume for landing
             audioSource.PlayOneShot(landSound);
+        }
     }
 
     /// <summary>

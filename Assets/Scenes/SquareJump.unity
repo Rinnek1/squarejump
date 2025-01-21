@@ -625,9 +625,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 513775579}
   visualTransform: {fileID: 513775578}
-  jumpStretchValue: 1.3
+  jumpStretchValue: 4
   landSquashValue: 0.7
-  animationSpeed: 2
+  animationSpeed: 3
+  maxTiltAngle: 3
+  tiltSpeed: 7
   jumpParticles: {fileID: 1938934829}
   landParticles: {fileID: 713633756}
   jumpSound: {fileID: 8300000, guid: b22b7f70d00677545a62e77f05daff76, type: 3}

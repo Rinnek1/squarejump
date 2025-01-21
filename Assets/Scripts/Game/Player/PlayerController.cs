@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Controls the player's movement and physics interactions.
@@ -33,11 +33,34 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            // Keyboard input for testing in Unity editor
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            moveX = horizontalInput * moveSpeed;
+    // Keyboard input for testing in Unity editor
+    if (Input.GetMouseButton(0)) // 
+    {
+        if (!isTouching)
+        {
+            //  TouchPhase.Began
+            touchStartPosition = Input.mousePosition;
+            isTouching = true;
+        }
+        else
+        {
+            //TouchPhase.Moved
+            float swipeDelta = Input.mousePosition.x - touchStartPosition.x;
+            moveX = Mathf.Clamp(swipeDelta / Screen.width * moveSpeed, -moveSpeed, moveSpeed);
+        }
+    }
+    else if (isTouching)
+    {
+        //  TouchPhase.Ended
+        isTouching = false;
+        moveX = 0f;
+    }
+
+    // Zachowujemy też sterowanie klawiaturą
+    float horizontalInput = Input.GetAxisRaw("Horizontal");
+    if (horizontalInput != 0) moveX = horizontalInput * moveSpeed;
 #elif UNITY_ANDROID
-            HandleMobileInput();
+    HandleMobileInput();
 #endif
     }
 
