@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class Death : MonoBehaviour
 {
-    public float fallThreshold = -10.0f; // Y-position threshold for falling off-screen
-
     void Update()
     {
-        if (transform.position.y < fallThreshold)
+        Vector3 viewportPosition = Camera.main.WorldToViewportPoint(transform.position);
+
+        if (viewportPosition.y < 0 || viewportPosition.y > 1 || viewportPosition.x < 0 || viewportPosition.x > 1)
         {
             SceneManager.LoadScene("MainMenu");
         }
@@ -17,7 +17,7 @@ public class Death : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag==("Death"))
+        if (collision.CompareTag("Death"))
         {
             SceneManager.LoadScene("MainMenu");
         }
