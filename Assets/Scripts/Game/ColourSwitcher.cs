@@ -89,4 +89,5 @@ public class SpriteSwitcher : MonoBehaviour
     {
         return spriteRenderer.sprite;
     }
+
 }

@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7117c716f22b44c8354bd0cff6b5d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 15
   rb: {fileID: 0}
 --- !u!50 &581288301
 Rigidbody2D:
@@ -644,7 +644,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0.5
   m_AngularDrag: 0.05
   m_GravityScale: 0.5
@@ -855,7 +855,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c96fe6ca9f0194ca92f668f01668ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallThreshold: -10
 --- !u!114 &581288308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5950,6 +5949,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Platform 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1502098370413652608, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
+      propertyPath: m_TagString
+      value: Platform
+      objectReference: {fileID: 0}
     - target: {fileID: 2513436972216484610, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.019874573
@@ -6039,7 +6042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c96fe6ca9f0194ca92f668f01668ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallThreshold: -10
 --- !u!1 &1410817732
 GameObject:
   m_ObjectHideFlags: 0
