@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PlatformGeneration : MonoBehaviour
 {
-    public GameObject platformPrefab1; // First platform prefab
-    public GameObject platformPrefab2; // Second platform prefab
+    public GameObject platformPrefab1;
+    public GameObject platformPrefab2;
+    public GameObject spikeballPrefab; // Spikeball prefab
     public float platformWidth = 2.5f;
     public float minY = 0.5f;
     public float maxY = 2.0f;
     public float levelWidth = 5.0f;
+    public float spikeballChance = 0.3f; // Chance to spawn a spikeball (0 to 1)
 
     private float highestY;
 
@@ -36,13 +38,25 @@ public class PlatformGeneration : MonoBehaviour
         float x = Random.Range(-levelWidth / 2, levelWidth / 2);
         Vector3 position = new Vector3(x, y, 0);
 
-        // Randomly pick between platformPrefab1 and platformPrefab2
         GameObject selectedPrefab = Random.value > 0.5f ? platformPrefab1 : platformPrefab2;
-
         GameObject platform = Instantiate(selectedPrefab, position, Quaternion.identity);
         platform.AddComponent<PlatformDestroyer>();
 
+        // Randomly generate a spikeball near the platform
+        if (Random.value < spikeballChance)
+        {
+            GenerateSpikeball(y);
+        }
+
         highestY = Mathf.Max(highestY, y);
+    }
+
+    void GenerateSpikeball(float y)
+    {
+        float x = Random.Range(-levelWidth / 2, levelWidth / 2);
+        Vector3 position = new Vector3(x, y + Random.Range(1.0f, 2.0f), 0); // Slightly above the platform
+        GameObject spikeball = Instantiate(spikeballPrefab, position, Quaternion.identity);
+        spikeball.AddComponent<PlatformDestroyer>();
     }
 }
 
