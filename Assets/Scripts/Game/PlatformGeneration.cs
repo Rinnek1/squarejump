@@ -1,21 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Controls platform generation and management in the game.
+/// </summary>
 public class PlatformGeneration : MonoBehaviour
 {
-    public GameObject platformPrefab1;
-    public GameObject platformPrefab2;
-    public GameObject spikeballPrefab; // Spikeball prefab
-    public float platformWidth = 2.5f;
-    public float minY = 0.5f;
-    public float maxY = 2.0f;
-    public float levelWidth = 5.0f;
-    public float spikeballChance = 0.3f; // Chance to spawn a spikeball (0 to 1)
+    [Header("Prefabs")]
+    [SerializeField] private GameObject platformPrefab;
+    [SerializeField] private GameObject spikeballPrefab;
+
+    [Header("Generation Settings")]
+    [SerializeField] private float platformWidth = 2.5f;
+    [SerializeField] private float minY = 0.5f;
+    [SerializeField] private float maxY = 2.0f;
+    [SerializeField] private float levelWidth = 5.0f;
+    [SerializeField] private float spikeballChance = 0.3f;
+
+    // Platform colors
+    private readonly Color color1 = new Color(0.976f, 0.380f, 0.404f); // #F96167
+    private readonly Color color2 = new Color(0.976f, 0.906f, 0.584f); // #F9E795
 
     private float highestY;
 
-    void Start()
+    private void Start()
     {
         for (int i = 0; i < 10; i++)
         {
@@ -23,26 +30,30 @@ public class PlatformGeneration : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         float playerY = Camera.main.transform.position.y;
-
         if (playerY + 10.0f > highestY)
         {
             GeneratePlatform(highestY + Random.Range(minY, maxY));
         }
     }
 
-    void GeneratePlatform(float y)
+    private void GeneratePlatform(float y)
     {
-        float x = Random.Range(-levelWidth / 2, levelWidth / 2);
-        Vector3 position = new Vector3(x, y, 0);
+        Vector3 position = new Vector3(
+            Random.Range(-levelWidth / 2, levelWidth / 2),
+            y,
+            0
+        );
 
-        GameObject selectedPrefab = Random.value > 0.5f ? platformPrefab1 : platformPrefab2;
-        GameObject platform = Instantiate(selectedPrefab, position, Quaternion.identity);
+        GameObject platform = Instantiate(platformPrefab, position, Quaternion.identity);
+
+        SpriteRenderer platformSprite = platform.GetComponent<SpriteRenderer>();
+        platformSprite.color = Random.value > 0.5f ? color1 : color2;
+
         platform.AddComponent<PlatformDestroyer>();
 
-        // Randomly generate a spikeball near the platform
         if (Random.value < spikeballChance)
         {
             GenerateSpikeball(y);
@@ -51,10 +62,13 @@ public class PlatformGeneration : MonoBehaviour
         highestY = Mathf.Max(highestY, y);
     }
 
-    void GenerateSpikeball(float y)
+    private void GenerateSpikeball(float y)
     {
-        float x = Random.Range(-levelWidth / 2, levelWidth / 2);
-        Vector3 position = new Vector3(x, y + Random.Range(1.0f, 2.0f), 0); // Slightly above the platform
+        Vector3 position = new Vector3(
+            Random.Range(-levelWidth / 2, levelWidth / 2),
+            y + Random.Range(1.0f, 2.0f),
+            0
+        );
         GameObject spikeball = Instantiate(spikeballPrefab, position, Quaternion.identity);
         spikeball.AddComponent<PlatformDestroyer>();
     }
@@ -62,7 +76,7 @@ public class PlatformGeneration : MonoBehaviour
 
 public class PlatformDestroyer : MonoBehaviour
 {
-    void Update()
+    private void Update()
     {
         if (Camera.main.transform.position.y - 10.0f > transform.position.y)
         {

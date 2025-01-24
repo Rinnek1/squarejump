@@ -1,93 +1,51 @@
 using UnityEngine;
 
-public class SpriteSwitcher : MonoBehaviour
+public class ColorSwitcher : MonoBehaviour
 {
-    [Header("Sprites")]
-    [Tooltip("Primary sprite (e.g., red square)")]
-    public Sprite sprite1;
-
-    [Tooltip("Secondary sprite (e.g., blue square)")]
-    public Sprite sprite2;
+    [Header("Colors")]
+    [SerializeField] private Color primaryColor = new Color(0.976f, 0.380f, 0.404f); // #F96167
+    [SerializeField] private Color secondaryColor = new Color(0.976f, 0.906f, 0.584f); // #F9E795
 
     private SpriteRenderer spriteRenderer;
-
-    // Double-tap detection
     private float lastTapTime = 0f;
-    [Tooltip("Maximum time interval (in seconds) between taps to register a double-tap")]
-    public float doubleTapThreshold = 0.3f; // Adjust this value for sensitivity
+    [SerializeField] private float doubleTapThreshold = 0.3f;
 
-    /// <summary>
-    /// Initialize the SpriteRenderer by finding it in the child object.
-    /// </summary>
     private void Awake()
     {
-        // Get the SpriteRenderer from the child object (Visual)
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
         if (spriteRenderer == null)
         {
-            Debug.LogError("SpriteRenderer is missing in the child! Please ensure a SpriteRenderer is attached to the Visual child object.");
+            Debug.LogError("SpriteRenderer missing in Visual child object!");
             return;
         }
-
-        // Set the initial sprite
-        spriteRenderer.sprite = sprite1;
+        spriteRenderer.color = primaryColor;
     }
 
-    /// <summary>
-    /// Detects input and toggles sprite on double-tap.
-    /// </summary>
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Detect screen tap or mouse click
+        if (Input.GetMouseButtonDown(0))
         {
             HandleDoubleTap();
         }
     }
 
-    /// <summary>
-    /// Detects a double-tap and toggles the sprite if detected.
-    /// </summary>
     private void HandleDoubleTap()
     {
-        float currentTime = Time.time; // Get the current time
-
-        // Check if this tap is within the double-tap threshold
+        float currentTime = Time.time;
         if (currentTime - lastTapTime <= doubleTapThreshold)
         {
-            // Double-tap detected, toggle the sprite
-            ToggleSprite();
+            ToggleColor();
         }
-
-        // Update the last tap time
         lastTapTime = currentTime;
     }
 
-    /// <summary>
-    /// Toggles the sprite between sprite1 and sprite2.
-    /// </summary>
-    private void ToggleSprite()
+    private void ToggleColor()
     {
-        // Get the current sprite
-        Sprite currentSprite = spriteRenderer.sprite;
-
-        // Switch to the other sprite
-        if (currentSprite == sprite1)
-        {
-            spriteRenderer.sprite = sprite2;
-        }
-        else
-        {
-            spriteRenderer.sprite = sprite1;
-        }
+        spriteRenderer.color = spriteRenderer.color == primaryColor ? secondaryColor : primaryColor;
     }
 
-    /// <summary>
-    /// Returns the current sprite of the player.
-    /// </summary>
-    public Sprite GetCurrentSprite()
+    public Color GetCurrentColor()
     {
-        return spriteRenderer.sprite;
+        return spriteRenderer.color;
     }
-
 }
