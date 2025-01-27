@@ -10,10 +10,14 @@ public class PlatformGeneration : MonoBehaviour
     [SerializeField] private GameObject spikeballPrefab;
 
     [Header("Generation Settings")]
+
     [SerializeField] private float minY = 0.5f;
     [SerializeField] private float maxY = 2.0f;
     [SerializeField] private float levelWidth = 5.0f;
     [SerializeField] private float spikeballChance = 0.3f;
+
+    [Header("Score Settings")]
+    [SerializeField] private int spikeballThreshold = 100; // Score threshold to start generating spikeballs
 
     // Platform colors
     private readonly Color color1 = new Color(0.976f, 0.380f, 0.404f); // #F96167
@@ -54,11 +58,14 @@ public class PlatformGeneration : MonoBehaviour
         platform.AddComponent<PlatformDestroyer>();
         platform.AddComponent<ColorChecker>(); // Add the ColorChecker script for checking colors
 
-        if (Random.value < spikeballChance)
+        // Check if spikeballs should start generating based on the score
+        if (ScoreManager.Instance != null && ScoreManager.Instance.GetScore() >= spikeballThreshold)
         {
-            GenerateSpikeball(y);
+            if (Random.value < spikeballChance)
+            {
+                GenerateSpikeball(y);
+            }
         }
-
         highestY = Mathf.Max(highestY, y);
     }
 

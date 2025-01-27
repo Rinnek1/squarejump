@@ -1,8 +1,10 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static ScoreManager Instance { get; private set; }
+
     [Header("References")]
     [Tooltip("Reference to the player object")]
     public Transform player;
@@ -17,9 +19,18 @@ public class ScoreManager : MonoBehaviour
     private int currentScore;
     private int highScore;
 
-    /// <summary>
-    /// Initialize the starting position and load the high score.
-    /// </summary>
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         if (player != null)
@@ -27,14 +38,10 @@ public class ScoreManager : MonoBehaviour
             startingY = player.position.y;
         }
 
-        // Load the saved high score
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         UpdateHighScoreUI();
     }
 
-    /// <summary>
-    /// Update the score based on the player's vertical position.
-    /// </summary>
     private void Update()
     {
         if (player != null)
@@ -43,7 +50,6 @@ public class ScoreManager : MonoBehaviour
             currentScore = Mathf.FloorToInt(distanceTravelled);
             UpdateScoreUI(currentScore);
 
-            // Check and update the high score if necessary
             if (currentScore > highScore)
             {
                 highScore = currentScore;
@@ -53,10 +59,11 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Updates the current score UI.
-    /// </summary>
-    /// <param name="score">The current score to display</param>
+    public int GetScore()
+    {
+        return currentScore;
+    }
+
     private void UpdateScoreUI(int score)
     {
         if (scoreText != null)
@@ -65,9 +72,6 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Updates the high score UI.
-    /// </summary>
     private void UpdateHighScoreUI()
     {
         if (highScoreText != null)
@@ -76,12 +80,9 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Saves the high score using PlayerPrefs.
-    /// </summary>
     private void SaveHighScore()
     {
         PlayerPrefs.SetInt("HighScore", highScore);
-        PlayerPrefs.Save(); // Ensure the high score is saved
+        PlayerPrefs.Save();
     }
 }
