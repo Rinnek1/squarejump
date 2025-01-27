@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7117c716f22b44c8354bd0cff6b5d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
+  moveSpeed: 20
   rb: {fileID: 0}
 --- !u!50 &581288301
 Rigidbody2D:
@@ -5945,6 +5945,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 427203024709896172, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
+      propertyPath: jumpForce
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 1502098370413652608, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
       propertyPath: m_Name
       value: Platform 1

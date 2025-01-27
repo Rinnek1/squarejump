@@ -10,7 +10,6 @@ public class PlatformGeneration : MonoBehaviour
     [SerializeField] private GameObject spikeballPrefab;
 
     [Header("Generation Settings")]
-    [SerializeField] private float platformWidth = 2.5f;
     [SerializeField] private float minY = 0.5f;
     [SerializeField] private float maxY = 2.0f;
     [SerializeField] private float levelWidth = 5.0f;
@@ -53,6 +52,7 @@ public class PlatformGeneration : MonoBehaviour
         platformSprite.color = Random.value > 0.5f ? color1 : color2;
 
         platform.AddComponent<PlatformDestroyer>();
+        platform.AddComponent<ColorChecker>(); // Add the ColorChecker script for checking colors
 
         if (Random.value < spikeballChance)
         {
