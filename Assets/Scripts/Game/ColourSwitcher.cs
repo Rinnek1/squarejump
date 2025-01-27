@@ -23,9 +23,16 @@ public class ColorSwitcher : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        // Handle double-tap switching
+        if (Input.GetMouseButtonDown(0)) // Left click
         {
             HandleDoubleTap();
+        }
+
+        // Handle right-click for color toggle (for testing on PC)
+        if (Input.GetMouseButtonDown(1)) // Right click
+        {
+            ToggleColor();
         }
     }
 
@@ -47,5 +54,13 @@ public class ColorSwitcher : MonoBehaviour
     public Color GetCurrentColor()
     {
         return spriteRenderer.color;
+    }
+
+    public void SetCurrentColor(Color platformColor)
+    {
+        if (platformColor == primaryColor || platformColor == secondaryColor)
+        {
+            spriteRenderer.color = platformColor;
+        }
     }
 }

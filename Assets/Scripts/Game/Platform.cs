@@ -7,16 +7,18 @@
 public class Platform : MonoBehaviour
 {
     [Header("Physics Settings")]
-    [Tooltip("Force applied when player bounces off platform")]
-    [SerializeField] private float jumpForce = 10f;
+    [Tooltip("Base force applied when player bounces off platform")]
+    [SerializeField] private float baseJumpForce = 10f;
 
     [Tooltip("Maximum allowed collision velocity")]
     [SerializeField] private float maxCollisionVelocity = 20f;
 
-    /// <summary>
-    /// Handles collision detection and bounce mechanics.
-    /// </summary>
-    /// <param name="collision">Collision information containing colliding object data</param>
+    [Tooltip("Bounce force increment every 50 points")]
+    [SerializeField] private float bounceForceIncrement = 2f;
+
+    [Tooltip("Maximum cap for bounce force")]
+    [SerializeField] private float maxBounceForce = 25f;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if object is falling onto the platform
@@ -40,7 +42,7 @@ public class Platform : MonoBehaviour
     }
 
     /// <summary>
-    /// Applies vertical bounce force with safety checks.
+    /// Applies vertical bounce force dynamically based on score.
     /// </summary>
     private void ApplyBounceForce(Rigidbody2D rb)
     {
@@ -49,8 +51,12 @@ public class Platform : MonoBehaviour
         // Preserve current horizontal velocity
         float currentHorizontalVelocity = velocity.x;
 
+        // Adjust bounce force based on score
+        float scoreMultiplier = ScoreManager.Instance != null ? (ScoreManager.Instance.GetScore() / 50) : 0;
+        float adjustedBounceForce = Mathf.Min(baseJumpForce + scoreMultiplier * bounceForceIncrement, maxBounceForce);
+
         // Apply bounce force with clamping
-        velocity.y = Mathf.Clamp(jumpForce, -maxCollisionVelocity, maxCollisionVelocity);
+        velocity.y = Mathf.Clamp(adjustedBounceForce, -maxCollisionVelocity, maxCollisionVelocity);
 
         // Restore horizontal velocity
         velocity.x = currentHorizontalVelocity;

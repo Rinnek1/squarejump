@@ -8,75 +8,94 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Horizontal movement speed of the player")]
-    public float moveSpeed = 5f;
+    [SerializeField] public float moveSpeed = 5f;
+
+    [Tooltip("Reduced speed during penalty phase")]
+    [SerializeField] private float penaltyMoveSpeed = 2f;
+
+    [Tooltip("Duration of penalty in seconds")]
+    [SerializeField] private float penaltyDuration = 3f;
+
+    [Header("Size Reduction Settings")]
+    [Tooltip("The scale factor for the player when penalized")]
+    [SerializeField] private Vector3 penaltyScale = new Vector3(0.5f, 0.5f, 1f);
+
+    [Tooltip("Original player scale (default size)")]
+    private Vector3 originalScale;
+
+    [Header("Death Settings")]
+    [Tooltip("Reference to the Death script for handling death logic")]
+    private Death deathScript;
 
     [Header("Components")]
-    [SerializeField]
-    private Rigidbody2D rb;
+    [SerializeField] private Rigidbody2D rb;
 
-    // Input variables
     private float moveX;
     private Vector2 touchStartPosition;
     private bool isTouching;
 
-    /// <summary>
-    /// Initializes required components
-    /// </summary>
+    // Penalty state variables
+    private bool isPenalized = false;
+    private bool isSmall = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        originalScale = transform.localScale;
+        deathScript = GetComponent<Death>();
+
+        if (deathScript == null)
+        {
+            Debug.LogError("Death script not found on the Player GameObject.");
+        }
     }
 
-    /// <summary>
-    /// Handles input detection
-    /// </summary>
     private void Update()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
-    // Keyboard input for testing in Unity editor
-    if (Input.GetMouseButton(0)) // 
-    {
-        if (!isTouching)
-        {
-            //  TouchPhase.Began
-            touchStartPosition = Input.mousePosition;
-            isTouching = true;
-        }
-        else
-        {
-            //TouchPhase.Moved
-            float swipeDelta = Input.mousePosition.x - touchStartPosition.x;
-            moveX = Mathf.Clamp(swipeDelta / Screen.width * moveSpeed, -moveSpeed, moveSpeed);
-        }
-    }
-    else if (isTouching)
-    {
-        //  TouchPhase.Ended
-        isTouching = false;
-        moveX = 0f;
-    }
-
-    // Zachowujemy też sterowanie klawiaturą
-    float horizontalInput = Input.GetAxisRaw("Horizontal");
-    if (horizontalInput != 0) moveX = horizontalInput * moveSpeed;
+        HandleKeyboardInput();
 #elif UNITY_ANDROID
-    HandleMobileInput();
+        HandleMobileInput();
 #endif
     }
 
-    /// <summary>
-    /// Applies physics-based movement
-    /// </summary>
     private void FixedUpdate()
+    {
+        ApplyMovement();
+    }
+
+    private void ApplyMovement()
     {
         Vector2 velocity = rb.velocity;
         velocity.x = moveX;
         rb.velocity = velocity;
     }
 
-    /// <summary>
-    /// Processes mobile touch input for movement
-    /// </summary>
+    private void HandleKeyboardInput()
+    {
+        if (Input.GetMouseButton(0)) // Detect mouse input
+        {
+            if (!isTouching)
+            {
+                touchStartPosition = Input.mousePosition;
+                isTouching = true;
+            }
+            else
+            {
+                float swipeDelta = Input.mousePosition.x - touchStartPosition.x;
+                moveX = Mathf.Clamp(swipeDelta / Screen.width * moveSpeed, -moveSpeed, moveSpeed);
+            }
+        }
+        else if (isTouching)
+        {
+            isTouching = false;
+            moveX = 0f;
+        }
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        if (horizontalInput != 0) moveX = horizontalInput * moveSpeed;
+    }
+
     private void HandleMobileInput()
     {
         if (Input.touchCount > 0)
@@ -104,5 +123,50 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void ApplyPenalty()
+    {
+        if (!isPenalized)
+        {
+            StartCoroutine(PenaltyCoroutine());
+        }
+        else
+        {
+            deathScript?.TriggerDeath(); // Trigger death directly from the Death script
+        }
+    }
+
+    private System.Collections.IEnumerator PenaltyCoroutine()
+    {
+        isPenalized = true;
+
+        if (!isSmall)
+        {
+            // First penalty: reduce size and movement speed
+            isSmall = true;
+            transform.localScale = penaltyScale;
+            float originalSpeed = moveSpeed;
+            moveSpeed = penaltyMoveSpeed;
+
+            yield return new WaitForSeconds(penaltyDuration);
+
+            // Restore original size and speed
+            transform.localScale = originalScale;
+            moveSpeed = originalSpeed;
+
+            isPenalized = false;
+        }
+    }
+
+    /// <summary>
+    /// Resets the player to its original state. Useful for debugging or respawning.
+    /// </summary>
+    public void ResetPlayer()
+    {
+        isSmall = false;
+        isPenalized = false;
+        transform.localScale = originalScale;
+        moveSpeed = 5f;
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 427203024709896172}
   m_Layer: 0
   m_Name: Platform 1
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,5 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7b06da7b5e4a94790f4361bd267bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 70
-  maxCollisionVelocity: 20
+  baseJumpForce: 20
+  maxCollisionVelocity: 30
+  bounceForceIncrement: 2
+  maxBounceForce: 25

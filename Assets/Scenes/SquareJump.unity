@@ -630,7 +630,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7117c716f22b44c8354bd0cff6b5d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
+  moveSpeed: 40
+  penaltyMoveSpeed: 2
+  penaltyDuration: 3
+  penaltyScale: {x: 0.5, y: 0.5, z: 1}
   rb: {fileID: 0}
 --- !u!50 &581288301
 Rigidbody2D:
@@ -644,10 +647,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 2.5
+  m_GravityScale: 3.5
   m_Material: {fileID: 6200000, guid: eec8e7b8939cbbd49aed6f3a89c4825c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -855,6 +858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c96fe6ca9f0194ca92f668f01668ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneToLoad: MainMenu
+  boundaryOffset: 0.1
 --- !u!114 &581288308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5945,17 +5950,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 427203024709896172, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
-      propertyPath: jumpForce
-      value: 500
-      objectReference: {fileID: 0}
     - target: {fileID: 1502098370413652608, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
       propertyPath: m_Name
       value: Platform 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1502098370413652608, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
-      propertyPath: m_TagString
-      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 2513436972216484610, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6046,6 +6043,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c96fe6ca9f0194ca92f668f01668ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneToLoad: MainMenu
+  boundaryOffset: 0.1
 --- !u!1 &1410817732
 GameObject:
   m_ObjectHideFlags: 0
@@ -10907,11 +10906,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   platformPrefab: {fileID: 1502098370413652608, guid: 49dca504781f9e44e877bf0b56814da9, type: 3}
   spikeballPrefab: {fileID: 6713793297491338606, guid: b61d23f37236935489c005c67b98ccb9, type: 3}
-  platformWidth: 2.5
   minY: 0.5
   maxY: 5
   levelWidth: 6
+  minHorizontalDistance: 1.5
   spikeballChance: 0.3
+  spikeballThreshold: 100
+  movingPlatformChance: 0.2
+  movingPlatformChanceIncrement: 0.05
 --- !u!4 &1731453041
 Transform:
   m_ObjectHideFlags: 0

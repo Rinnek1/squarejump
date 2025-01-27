@@ -6,13 +6,8 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager Instance { get; private set; }
 
     [Header("References")]
-    [Tooltip("Reference to the player object")]
     public Transform player;
-
-    [Tooltip("Reference to the UI Text for the score")]
     public TextMeshProUGUI scoreText;
-
-    [Tooltip("Reference to the UI Text for the high score")]
     public TextMeshProUGUI highScoreText;
 
     private float startingY;
@@ -66,18 +61,12 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreUI(int score)
     {
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score.ToString();
-        }
+        scoreText.text = "Score: " + score.ToString();
     }
 
     private void UpdateHighScoreUI()
     {
-        if (highScoreText != null)
-        {
-            highScoreText.text = "High Score: " + highScore.ToString();
-        }
+        highScoreText.text = "High Score: " + highScore.ToString();
     }
 
     private void SaveHighScore()
