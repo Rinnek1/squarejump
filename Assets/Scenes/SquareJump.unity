@@ -10911,7 +10911,7 @@ MonoBehaviour:
   levelWidth: 6
   minHorizontalDistance: 1.5
   spikeballChance: 0.3
-  spikeballThreshold: 100
+  spikeballThreshold: 50
   movingPlatformChance: 0.2
   movingPlatformChanceIncrement: 0.05
 --- !u!4 &1731453041

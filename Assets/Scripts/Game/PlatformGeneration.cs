@@ -28,7 +28,7 @@ public class PlatformGeneration : MonoBehaviour
 
     [Header("Dynamic Difficulty Settings")]
     [Tooltip("Score threshold to start generating spikeballs")]
-    [SerializeField] private int spikeballThreshold = 100;
+    [SerializeField] private int spikeballThreshold = 50;
 
     [Tooltip("Base chance of spawning platforms with moving behavior (0 to 1)")]
     [SerializeField] private float movingPlatformChance = 0.2f;
@@ -103,10 +103,13 @@ public class PlatformGeneration : MonoBehaviour
         }
 
         // Add spikeball above the platform based on the score threshold
-        if (ScoreManager.Instance != null && ScoreManager.Instance.GetScore() >= spikeballThreshold)
+        if (ScoreManager.Instance != null)
         {
-            if (Random.value < spikeballChance)
+            int currentScore = ScoreManager.Instance.GetScore();
+
+            if (currentScore >= spikeballThreshold && Random.value < spikeballChance)
             {
+                Debug.Log("Spawning Spikeball! Score: " + currentScore);
                 GenerateSpikeball(y);
             }
         }
@@ -121,6 +124,8 @@ public class PlatformGeneration : MonoBehaviour
         );
         GameObject spikeball = Instantiate(spikeballPrefab, position, Quaternion.identity);
         spikeball.AddComponent<PlatformDestroyer>();
+
+        Debug.Log("Spikeball spawned at Y: " + y);
     }
 
     private bool IsPositionValid(Vector3 position)
