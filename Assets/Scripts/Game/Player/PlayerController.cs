@@ -10,9 +10,6 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Horizontal movement speed of the player")]
     [SerializeField] public float moveSpeed = 5f;
 
-    [Tooltip("Reduced speed during penalty phase")]
-    [SerializeField] private float penaltyMoveSpeed = 2f;
-
     [Tooltip("Duration of penalty in seconds")]
     [SerializeField] private float penaltyDuration = 3f;
 
@@ -152,17 +149,14 @@ public class PlayerController : MonoBehaviour
 
         if (!isSmall)
         {
-            // First penalty: reduce size and movement speed
+            // First penalty: reduce size (removed movement debuff)
             isSmall = true;
             transform.localScale = penaltyScale;
-            float originalSpeed = moveSpeed;
-            moveSpeed = penaltyMoveSpeed;
 
             yield return new WaitForSeconds(penaltyDuration);
 
-            // Restore original size and speed
+            // Restore original size
             transform.localScale = originalScale;
-            moveSpeed = originalSpeed;
 
             isPenalized = false;
         }
