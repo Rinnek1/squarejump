@@ -149,26 +149,39 @@ public class PlayerController : MonoBehaviour
 
         if (!isSmall)
         {
-            // First penalty: reduce size (removed movement debuff)
+            // First penalty: reduce size
             isSmall = true;
             transform.localScale = penaltyScale;
 
             yield return new WaitForSeconds(penaltyDuration);
-
-            // Restore original size
-            transform.localScale = originalScale;
 
             isPenalized = false;
         }
     }
 
     /// <summary>
-    /// Restores lives to the maximum.
+    /// Restores lives to the maximum and resets size if shrunk.
     /// </summary>
     public void RestoreLives()
     {
         currentLives = maxLives;
+
+        // Reset player size if shrunk
+        if (isSmall)
+        {
+            transform.localScale = originalScale;
+            isSmall = false;
+        }
+
         Debug.Log("Lives restored to: " + currentLives);
+    }
+
+    /// <summary>
+    /// Handles platform collisions to restore lives if the correct color matches.
+    /// </summary>
+    public void HandleCorrectColorPlatform()
+    {
+        RestoreLives();
     }
 
     /// <summary>
@@ -181,13 +194,5 @@ public class PlayerController : MonoBehaviour
         transform.localScale = originalScale;
         moveSpeed = 5f;
         currentLives = maxLives;
-    }
-
-    /// <summary>
-    /// Handles platform collisions to restore lives if the correct color matches.
-    /// </summary>
-    public void HandleCorrectColorPlatform()
-    {
-        RestoreLives();
     }
 }
