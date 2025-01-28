@@ -22,28 +22,36 @@ public class ColorChecker : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // Check if the object colliding is the player
         ColorSwitcher playerColorSwitcher = collision.gameObject.GetComponent<ColorSwitcher>();
         PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
         if (playerColorSwitcher != null && playerController != null)
         {
+            Color playerColor = playerColorSwitcher.GetCurrentColor();
+
             // Ensure the player is falling onto the platform
             if (collision.relativeVelocity.y <= 0f)
             {
-                Color playerColor = playerColorSwitcher.GetCurrentColor();
-
-                if (playerColor != platformColor)
+                if (playerColor == platformColor)
                 {
-                    // Apply penalty: stun the player and reduce movement temporarily
+                    // Restore lives if the color matches
+                    playerController.RestoreLives();
+                }
+                else
+                {
+                    // Penalize the player if the color doesn't match
                     playerController.ApplyPenalty();
-
-                    // Optionally, destroy the platform after penalty
-                    Invoke(nameof(DestroyPlatform), 0.5f);
+                    // Optionally destroy the platform after a delay
+                    Invoke(nameof(DestroyPlatform), 0.2f);
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Destroys the platform.
+    /// </summary>
     private void DestroyPlatform()
     {
         Destroy(gameObject);

@@ -23,6 +23,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Original player scale (default size)")]
     private Vector3 originalScale;
 
+    [Header("Life Settings")]
+    [Tooltip("Maximum lives the player can have")]
+    public int maxLives = 2;
+
+    private int currentLives;
+
     [Header("Death Settings")]
     [Tooltip("Reference to the Death script for handling death logic")]
     private Death deathScript;
@@ -48,6 +54,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Death script not found on the Player GameObject.");
         }
+
+        // Initialize lives
+        currentLives = maxLives;
     }
 
     private void Update()
@@ -160,6 +169,15 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Restores lives to the maximum.
+    /// </summary>
+    public void RestoreLives()
+    {
+        currentLives = maxLives;
+        Debug.Log("Lives restored to: " + currentLives);
+    }
+
+    /// <summary>
     /// Resets the player to its original state. Useful for debugging or respawning.
     /// </summary>
     public void ResetPlayer()
@@ -168,5 +186,14 @@ public class PlayerController : MonoBehaviour
         isPenalized = false;
         transform.localScale = originalScale;
         moveSpeed = 5f;
+        currentLives = maxLives;
+    }
+
+    /// <summary>
+    /// Handles platform collisions to restore lives if the correct color matches.
+    /// </summary>
+    public void HandleCorrectColorPlatform()
+    {
+        RestoreLives();
     }
 }
